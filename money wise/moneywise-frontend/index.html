@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="top-left-header">
+            <h1>Welcome!</h1>
+            <h2>MoneyWise User mode</h2>
+        </div>
+
+        <div class="center-box">
+
+            <form class="login-form" id="login-form" autocomplete="off">
+
+                <div class="input-wrapper">
+                    <input type="email" id="login-email" name="email" placeholder="Username" required>
+                    <span class="input-icon">👤</span>
+                </div>
+
+                <div class="input-wrapper">
+                    <input type="password" id="login-password" name="password" placeholder="Password" required>
+                    <span class="input-icon">🔒</span>
+                </div>
+
+                <div class="remember">
+                    <input type="checkbox" id="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+
+                <button type="submit" class="main-btn">Login</button>
+            </form>
+            
+            <div class="social-login">
+                <button>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Gmail_Icon.png" alt="Gmail">
+                    Gmail
+                </button>
+                <button>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="iCloud">
+                    iCloud
+                </button>
+            </div>
+
+            <div class="admin-link-container">
+                <button class="admin-link" onclick="window.location.href='admin-login.html'">Admin mode</button>
+            </div>
+
+
+            <div class="signup-link">
+                <p>Don't have an account?</p>
+                <button onclick="window.location.href='signup.html'">Sign Up</button>
+            </div>
+
+            <p id="login-msg"></p>
+        </div>
+
+
+
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
