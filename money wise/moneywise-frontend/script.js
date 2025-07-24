@@ -3,11 +3,17 @@ const API_URL = 'http://localhost:5000/api/auth';
 window.addEventListener('DOMContentLoaded', () => {
   const savedEmail = localStorage.getItem('savedEmail');
   const savedPassword = localStorage.getItem('savedPassword');
-  if (savedEmail && savedPassword) {
-    document.getElementById('login-email').value = savedEmail;
-    document.getElementById('login-password').value = savedPassword;
-    document.getElementById('remember').checked = true;
+
+  const loginEmailInput = document.getElementById('login-email');
+  const loginPasswordInput = document.getElementById('login-password');
+  const rememberCheckbox = document.getElementById('remember');
+
+  if (savedEmail && savedPassword && loginEmailInput && loginPasswordInput && rememberCheckbox) {
+    loginEmailInput.value = savedEmail;
+    loginPasswordInput.value = savedPassword;
+    rememberCheckbox.checked = true;
   }
+
 });
 
 // Handle Sign Up
@@ -15,23 +21,32 @@ const signupForm = document.getElementById('signup-form');
 if (signupForm) {
   signupForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    const username = document.getElementById('signup-username').value;
     const email = document.getElementById('signup-email').value;
     const password = document.getElementById('signup-password').value;
+    const confirm = document.getElementById('signup-confirm').value;
+
+    if (password !== confirm) {
+      document.getElementById('signup-msg').innerText = 'Passwords do not match';
+      return;
+    }
 
     try {
       const res = await fetch(`${API_URL}/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, email, password }),
       });
 
       const data = await res.json();
       console.log(data);
+
       if (res.ok) {
-        console.log('Login successful');
-  console.log('User role:', data.user.role);
+        console.log('Signup successful');
+        console.log('User role:', data.role);  // أو data.user.role حسب كيف رجّعت من السيرفر
         document.getElementById('signup-msg').innerText = 'Account created!';
-        window.location.href = 'index.html';
+        window.location.href = 'user-login.html';
       } else {
         document.getElementById('signup-msg').innerText = data.message || 'Error';
       }
@@ -40,6 +55,7 @@ if (signupForm) {
     }
   });
 }
+
 
 // Handle Login
 const loginForm = document.getElementById('login-form');

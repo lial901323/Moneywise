@@ -10,22 +10,35 @@ const generateToken = (id) => {
 
 // Register Route
 router.post('/signup', async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, username } = req.body;
+
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser)
       return res.status(400).json({ message: 'User already exists' });
 
-    const user = await User.create({ email, password });
+    const user = await User.create({
+      email,
+      password,
+      username,
+      role: 'user'
+    });
+
     res.status(201).json({
       _id: user._id,
       email: user.email,
+      username: user.username,
+      role: user.role,
       token: generateToken(user._id)
     });
+
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    console.error(err); // مهمة!
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
+
+
 
 // Login Route
 router.post('/login', async (req, res) => {
