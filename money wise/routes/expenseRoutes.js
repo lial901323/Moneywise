@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Expense = require('../models/expenseModel');
 
+
 const {
   createExpense,
   getExpenses,
@@ -15,6 +16,7 @@ router.put('/:id', updateExpense);
 router.delete('/:id', deleteExpense);
 
 
+
 router.get('/:id', async (req, res) => {
   try {
     const expense = await Expense.findById(req.params.id);
@@ -26,6 +28,9 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+
+
 
 
 module.exports = router;

@@ -4,6 +4,8 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const expenseRoutes = require('./routes/expenseRoutes');
 const authRoutes = require('./routes/auth');
+const depositRoutes = require('./routes/depositRoutes');
+
 
 require('dotenv').config();
 
@@ -17,6 +19,8 @@ app.use(express.json());
 
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/deposits', depositRoutes);
+
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,

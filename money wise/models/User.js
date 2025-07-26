@@ -20,7 +20,11 @@ const userSchema = new mongoose.Schema({
   username: {
       type: String,
       required: true
-  }
+  },
+  permissions: {
+  type: [String],
+  default: []
+}
 });
 
 // Hash password before saving
