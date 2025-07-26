@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="dashboard">
+      <aside class="sidebar">
+        <button class="nav-btn active"><i class="fas fa-home"></i> Home</button>
+        <button class="nav-btn"><i class="fas fa-user"></i> Profile</button>
+        <button class="nav-btn"><i class="fas fa-envelope"></i> Message</button>
+        <button class="nav-btn"><i class="fas fa-cog"></i> Settings</button>
+        <button class="nav-btn"><i class="fas fa-star"></i> Favourite</button>
+        <button class="nav-btn"><i class="fas fa-history"></i> History</button>
+        <button class="nav-btn"><i class="fas fa-sign-out-alt"></i> Signout</button>
+      </aside>
+    
+
+    <div class="main-content">
+      <section class="left-area">
+        <div class="search-bar">
+          <input type="text" placeholder="Search here...">
+        </div>
+
+        <div class="top-row">
+          <div class="left-row">
+            <div class="card card1">Card 1</div>
+            <div class="card card3">Card 3</div>
+          </div>
+          <div class="right-row">
+            <div class="card card2">Card 2</div>
+            <div class="card card4">Card 4</div>
+          </div>
+        </div>
+
+        <div class="top-row">
+          <div class="card card5">Card 5</div>
+          <div class="card card6">Card 6</div>
+        </div>
+      </section>
+    </div>
+
+    <section class="right-area">
+      <div class="top-row">
+        <div class="card boxA">Box A</div>
+        <div class="card boxB">Box B</div>
+      </div>
+      <div class="bottom-col">
+        <div class="card boxC">Box C</div>
+        <div class="card boxD">Box D</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const buttons = document.querySelectorAll('.nav-btn');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  </script>
+</body>
+
+</html>
