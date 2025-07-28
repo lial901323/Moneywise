@@ -23,7 +23,7 @@ app.use('/api/expenses', expenseRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/deposits', depositRoutes);
 app.use('/api/stats', statsRoutes);
-app.use('/api/stats', require('./routes/statsRoutes'));
+
 
 
 
