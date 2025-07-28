@@ -5,6 +5,8 @@ const cors = require('cors');
 const expenseRoutes = require('./routes/expenseRoutes');
 const authRoutes = require('./routes/auth');
 const depositRoutes = require('./routes/depositRoutes');
+const statsRoutes = require('./routes/statsRoutes');
+
 
 
 require('dotenv').config();
@@ -20,6 +22,9 @@ app.use(express.json());
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/deposits', depositRoutes);
+app.use('/api/stats', statsRoutes);
+app.use('/api/stats', require('./routes/statsRoutes'));
+
 
 
 mongoose.connect(process.env.MONGO_URI, {

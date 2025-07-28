@@ -1,15 +1,36 @@
 const Deposit = require('../models/depositModel');
+const User = require('../models/User'); 
 
 const createDeposit = async (req, res) => {
   try {
-    const { amount, source, userId } = req.body;
-    const newDeposit = new Deposit({ amount, source, userId });
+    const { amount, source } = req.body;
+    const userId = req.user.id;
+
+    if (!amount || !source) {
+      return res.status(400).json({ message: 'Amount and source are required' });
+    }
+
+    const newDeposit = new Deposit({
+      userId,
+      amount,
+      source
+    });
+
     await newDeposit.save();
+
+    // ⬇️ تحدّث رصيد المستخدم
+    await User.findByIdAndUpdate(userId, {
+      $inc: { balance: amount }
+    });
+
     res.status(201).json(newDeposit);
   } catch (err) {
-    res.status(500).json({ message: 'Error creating deposit', error: err.message });
+    console.error('Create Deposit Error:', err);
+    res.status(500).json({ message: 'Server Error' });
   }
 };
+
+
 
 const getTotalDeposits = async (req, res) => {
   try {

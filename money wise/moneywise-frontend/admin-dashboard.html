@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="admin-dashboard.css">
+</head>
+
+<body>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <button class="nav-btn active"><i class="fas fa-home"></i> Home</button>
+      <button class="nav-btn"><i class="fas fa-user"></i> Profile</button>
+      <button class="nav-btn"><i class="fas fa-envelope"></i> Message</button>
+      <button class="nav-btn"><i class="fas fa-cog"></i> Settings</button>
+      <button class="nav-btn"><i class="fas fa-star"></i> Favourite</button>
+      <button class="nav-btn"><i class="fas fa-history"></i> History</button>
+      <button class="nav-btn" onclick="window.location.href='user-login.html'"><i class="fas fa-sign-out-alt"></i>
+        Signout</button>
+    </aside>
+
+
+    <div class="main-content">
+      <section class="left-area">
+        <div class="search-bar">
+          <input type="text" placeholder="Search here...">
+        </div>
+
+        <div class="top-row">
+          <div class="left-row">
+            <div class="card card1">
+              <h3 class="card-title">Today’s Stats</h3>
+
+              <div class="sub-cards-row">
+
+                <div class="sub-card box1">
+                  <div class="box-header">
+                    <i class="fas fa-chart-bar"></i>
+                  </div>
+                  <h1 id="total-deposits-value" style="font-size: 24px;">$0</h1>
+                  <p style="font-size: 12px;">Total Deposits</p>
+                </div>
+
+                <div class="stat-row">
+                  <div class="sub-card">
+                    <i class="fas fa-bolt box-icon green-icon"></i>
+                    <h2 id="total-users">0</h2>
+                    <p>Total Users</p>
+                  </div>
+
+
+
+                  <div class="sub-card">
+                    <i class="fas fa-user-plus box-icon blue-icon"></i>
+                    <h2 id="new-customers">0</h2>
+                    <p>New Customer</p>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+            <h3 class="card card3">Level</h3>
+          </div>
+          <div class="right-row">
+            <div class="card card2">Card 2</div>
+            <div class="card card4">Card 4</div>
+          </div>
+        </div>
+
+        <div class="top-row">
+          <div class="card card5">Card 5</div>
+          <div class="card card6">Card 6</div>
+        </div>
+      </section>
+    </div>
+
+    <section class="right-area">
+      <div class="top-row">
+        <div class="box boxA">Box A</div>
+        <div class="box boxB">Box B</div>
+      </div>
+      <div class="bottom-col">
+        <div class="box boxC">Box C</div>
+        <div class="box boxD">Box D</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const buttons = document.querySelectorAll('.nav-btn');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          buttons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+      });
+
+      const token = localStorage.getItem('token');
+      if (!token) {
+        window.location.href = 'user-login.html';
+      }
+
+      fetch('http://localhost:5000/api/auth/admin-dashboard', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+        .then(res => {
+          if (!res.ok) throw new Error('Not authorized');
+          return res.json();
+        })
+        .then(data => {
+          const has = (perm) => data.permissions.includes(perm) || data.permissions.includes('all');
+
+          const showOrBlur = (selector) => {
+            const el = document.querySelector(selector);
+            if (!el) return;
+
+            if (has(selector.replace('.', ''))) {
+              el.classList.remove('no-access');
+              const msg = el.querySelector('.blur-text');
+              if (msg) msg.remove();
+            } else {
+              el.classList.add('no-access');
+              if (!el.querySelector('.blur-text')) {
+                const msg = document.createElement('div');
+                msg.className = 'blur-text';
+                msg.innerText = 'You are not allowed to view this';
+                el.appendChild(msg);
+              }
+            }
+          };
+
+
+          showOrBlur('.card1');
+          showOrBlur('.card2');
+          showOrBlur('.card3');
+          showOrBlur('.card4');
+          showOrBlur('.card5');
+          showOrBlur('.card6');
+
+          fetch('http://localhost:5000/api/deposits/total')
+            .then(res => res.json())
+            .then(data => {
+              const value = data.total || 0;
+              document.getElementById('total-deposits-value').innerText = `$${(value / 1000).toFixed(1)}k`;
+            })
+
+        })
+        .catch(err => {
+          console.error(err);
+          window.location.href = 'user-login.html';
+        });
+    });
+  </script>
+
+
+
+
+</body>
+
+</html>

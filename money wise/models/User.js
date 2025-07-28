@@ -24,7 +24,15 @@ const userSchema = new mongoose.Schema({
   permissions: {
   type: [String],
   default: []
-}
+},
+isPaid: {
+  type: Boolean,
+  default: false
+},
+balance: {
+    type: Number,
+    default: 0
+  }
 });
 
 // Hash password before saving

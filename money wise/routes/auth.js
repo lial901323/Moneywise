@@ -4,6 +4,9 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const { protect } = require('../middleware/authMiddleware');
 
+
+module.exports = { protect };
+
 // Generate Token
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
@@ -23,7 +26,7 @@ router.post('/signup', async (req, res) => {
       password,
       username,
       role: 'user'
-    });
+      });
 
     res.status(201).json({
       _id: user._id,
@@ -47,7 +50,7 @@ router.post('/login', async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user || !(await user.matchPassword(password))) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'wrong user-name or password' });
     }
 
     res.json({
@@ -81,6 +84,9 @@ router.get('/admin-dashboard', protect, async (req, res) => {
   });
 });
 
+router.get('/user-data', protect, async (req, res) => {
+  res.json({ username: req.user.username });
+});
 
 
 module.exports = router;
