@@ -2,10 +2,8 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-const { protect } = require('../middleware/authMiddleware');
+const protect = require('../middleware/authMiddleware');
 
-
-module.exports = { protect };
 
 // Generate Token
 const generateToken = (id) => {
@@ -26,7 +24,7 @@ router.post('/signup', async (req, res) => {
       password,
       username,
       role: 'user'
-      });
+    });
 
     res.status(201).json({
       _id: user._id,
@@ -37,7 +35,7 @@ router.post('/signup', async (req, res) => {
     });
 
   } catch (err) {
-    console.error(err); // مهمة!
+    console.error(err); // important 
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
@@ -50,7 +48,7 @@ router.post('/login', async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user || !(await user.matchPassword(password))) {
-      return res.status(401).json({ message: 'wrong user-name or password' });
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     res.json({
@@ -68,25 +66,23 @@ router.post('/login', async (req, res) => {
 
 
 
-// Admin Dashboard Route - Protected
+
+// ✅ Admin dashboard route
 router.get('/admin-dashboard', protect, async (req, res) => {
-  const user = req.user;
+  try {
+    const user = req.user;
 
-  if (user.role !== 'admin') {
-    return res.status(403).json({ message: 'Access denied' });
+    if (user.role !== 'admin') {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    res.json({ message: 'Welcome to the admin dashboard', email: user.email });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
-
-  res.json({
-    username: user.username,
-    email: user.email,
-    role: user.role,
-    permissions: user.permissions
-  });
 });
-
-router.get('/user-data', protect, async (req, res) => {
-  res.json({ username: req.user.username });
-});
-
 
 module.exports = router;
+
+
+
