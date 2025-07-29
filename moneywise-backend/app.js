@@ -6,6 +6,7 @@ const expenseRoutes = require('./routes/expenseRoutes');
 const authRoutes = require('./routes/auth');
 const depositRoutes = require('./routes/depositRoutes');
 const statsRoutes = require('./routes/statsRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 
 
@@ -15,15 +16,21 @@ require('dotenv').config();
 const app = express();
 dotenv.config();
  
+app.use(cors({
+  origin: 'http://127.0.0.1:5501',
+  credentials: true,
+  methods: ['GET', 'POST', 'DELETE', 'PUT', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
-app.use(cors());
 app.use(express.json());
 
+
+app.use("/api/admin", adminRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/deposits', depositRoutes);
 app.use('/api/stats', statsRoutes);
-app.use('/api/stats', require('./routes/statsRoutes'));
 
 
 
