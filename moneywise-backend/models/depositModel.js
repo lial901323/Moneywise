@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const depositSchema = new mongoose.Schema({
-  amount: {
+  amount: {  
     type: Number,
     required: true
   },
@@ -20,9 +20,9 @@ const depositSchema = new mongoose.Schema({
     required: true
   },
   createdAt: {
-  type: Date,
-  default: Date.now
-}
+    type: Date,
+    default: Date.now
+  }
 });
 
 module.exports = mongoose.model('Deposit', depositSchema);

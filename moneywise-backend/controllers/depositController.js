@@ -1,33 +1,36 @@
 const Deposit = require('../models/depositModel');
 const User = require('../models/User'); 
 
+const axios = require('axios');
+
 const createDeposit = async (req, res) => {
-  try {
-    const { amount, source } = req.body;
-    const userId = req.user.id;
+  const { amount, source, currency } = req.body;
 
-    if (!amount || !source) {
-      return res.status(400).json({ message: 'Amount and source are required' });
+  let amountInILS = amount;
+  if (currency !== 'ILS') {
+    try {
+      const response = await axios.get(
+        `https://api.frankfurter.app/latest?amount=${amount}&from=${currency}&to=ILS`
+      );
+      if (response.data?.rates?.ILS) {
+        amountInILS = response.data.rates.ILS;
+      }
+    } catch (error) {
+      console.error('Currency conversion failed:', error.message);
+      return res.status(500).json({ message: 'Currency conversion failed' });
     }
-
-    const newDeposit = new Deposit({
-      userId,
-      amount,
-      source
-    });
-
-    await newDeposit.save();
-
-    await User.findByIdAndUpdate(userId, {
-      $inc: { balance: amount }
-    });
-
-    res.status(201).json(newDeposit);
-  } catch (err) {
-    console.error('Create Deposit Error:', err);
-    res.status(500).json({ message: 'Server Error' });
   }
+
+  const newDeposit = new Deposit({
+    amount: amountInILS,
+    source,
+    userId: req.user.id
+  });
+
+  await newDeposit.save();
+  res.status(201).json(newDeposit);
 };
+
 
 
 

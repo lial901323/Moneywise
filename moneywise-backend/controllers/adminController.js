@@ -1,20 +1,7 @@
-const mongoose = require('mongoose');
 const User = require('../models/User');
 const Expense = require('../models/expenseModel');
 const Deposit = require('../models/depositModel');
-
-// ✅ Get user activity chart data
-const getUserActivityChart = async (req, res) => {
-  try {
-    const users = await User.find({}, 'email totalActivity');
-    const labels = users.map(u => u.email);
-    const data = users.map(u => u.totalActivity || 0);
-    res.status(200).json({ labels, data });
-  } catch (err) {
-    console.error('Error generating chart data:', err);
-    res.status(500).json({ message: 'Server error' });
-  }
-};
+const mongoose = require('mongoose');
 
 // ✅ Get all users (email + role only)
 const getAllUsers = async (req, res) => {
@@ -26,6 +13,17 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+const getUserActivityChart = async (req, res) => {
+  try {
+    const users = await User.find({}, 'email totalActivity');
+    const labels = users.map(u => u.email);
+    const data = users.map(u => u.totalActivity || 0);
+    res.status(200).json({ labels, data });
+  } catch (err) {
+    console.error('Error generating chart data:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 // ✅ Get all expenses (with user email)
 const getAllExpenses = async (req, res) => {
   try {
@@ -40,7 +38,12 @@ const getAllExpenses = async (req, res) => {
 const getTotalDeposits = async (req, res) => {
   try {
     const result = await Deposit.aggregate([
-      { $group: { _id: null, total: { $sum: '$amount' } } }
+      {
+        $group: {
+          _id: null,
+          total: { $sum: '$amount' }
+        }
+      }
     ]);
     const total = result.length > 0 ? result[0].total : 0;
     res.json({ total });
@@ -53,6 +56,8 @@ const getTotalDeposits = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const userId = req.params.id;
+
+    // Optionally prevent deleting yourself
     if (req.user.id === userId) {
       return res.status(400).json({ message: "Admins cannot delete themselves" });
     }
@@ -66,7 +71,7 @@ const deleteUser = async (req, res) => {
   }
 };
 
-// ✅ Get top 3 users by activity
+
 const getTopUsers = async (req, res) => {
   try {
     const topUsers = await User.aggregate([
@@ -104,7 +109,7 @@ const getTopUsers = async (req, res) => {
   }
 };
 
-// ✅ Get one user’s deposits and expenses
+
 const getUserDetails = async (req, res) => {
   try {
     const userId = req.params.id;
@@ -118,7 +123,7 @@ const getUserDetails = async (req, res) => {
   }
 };
 
-// ✅ Export all controllers together
+
 module.exports = {
   getUserActivityChart,
   getAllUsers,

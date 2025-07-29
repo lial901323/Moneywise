@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const expenseSchema = new mongoose.Schema({
-  amount: {
+  amount: {  
     type: Number,
     required: true,
   },
@@ -20,9 +20,9 @@ const expenseSchema = new mongoose.Schema({
     required: true,
   },
   createdAt: {
-  type: Date,
-  default: Date.now
-},
+    type: Date,
+    default: Date.now
+  },
 });
 
 module.exports = mongoose.model('Expense', expenseSchema);

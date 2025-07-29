@@ -1,35 +1,33 @@
 const Expense = require('../models/expenseModel');
 const User = require('../models/User');
 const mongoose = require('mongoose');
-
+const axios = require('axios');
 
 const createExpense = async (req, res) => {
-  try {
-    const { amount, category } = req.body;
-    const userId = new mongoose.Types.ObjectId(req.user.id);
+  const { amount, category, currency } = req.body;
 
-    if (!amount || !category) {
-      return res.status(400).json({ message: 'Amount and category are required' });
-    }
-
-    const newExpense = new Expense({
-      userId,
-      amount,
-      category
-    });
-
-    await newExpense.save();
-
-    await User.findByIdAndUpdate(userId, {
-      $inc: { balance: -amount }
-    });
-
-    res.status(201).json(newExpense);
-  } catch (err) {
-    console.error('Create Expense Error:', err);
-    res.status(500).json({ message: 'Server Error' });
+  let amountInILS = amount;
+if (currency !== 'ILS') {
+  const response = await axios.get(
+    `https://api.frankfurter.app/latest?amount=${amount}&from=${currency}&to=ILS`
+  );
+  if (response.data?.rates?.ILS) {
+    amountInILS = response.data.rates.ILS;
   }
+}
+
+const newExpense = new Expense({
+  amount: amountInILS,
+  category,
+  userId: req.user.id
+});
+
+
+  await newExpense.save();
+  res.status(201).json(newExpense);
 };
+
+
 
 
 const getTotalExpenses = async (req, res) => {
