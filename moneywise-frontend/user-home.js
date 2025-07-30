@@ -2,6 +2,21 @@ let run;
 let expenseSummary = {};
 
 
+const updateBalance = async () => {
+    const token = localStorage.getItem('token');
+    try {
+        const res = await fetch('https://moneywise-backend.onrender.com/api/stats/balance', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = await res.json();
+        document.getElementById('balance-amount').textContent = `₪${data.balance.toFixed(2)}`;
+    } catch (err) {
+        console.error('Error updating balance:', err);
+    }
+};
+
+
+
 
 async function fetchMonthlySummary() {
     const token = localStorage.getItem('token');
@@ -98,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const incomeTodayData = await incomeTodayRes.json();
             document.getElementById('income-today').textContent = `₪${incomeTodayData.total.toFixed(2)}`;
 
-            const expenseTodayRes = await fetch('hhttps://moneywise-backend.onrender.com/api/stats/expense-today', {
+            const expenseTodayRes = await fetch('https://moneywise-backend.onrender.com/api/stats/expense-today', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const expenseTodayData = await expenseTodayRes.json();
@@ -154,29 +169,33 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('add-income').addEventListener('click', async () => {
         const amount = document.getElementById('income-input').value;
         const source = document.getElementById('income-source').value;
+        const currency = document.getElementById('income-currency').value;
+
         if (!amount || !source) return alert("Please enter both amount and source.");
 
         const token = localStorage.getItem('token');
+
         await fetch('https://moneywise-backend.onrender.com/api/deposits', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({
-                amount: parseFloat(amount),
-                source: source.trim()
-            })
+            body: JSON.stringify({ amount: parseFloat(amount), source, currency })
         });
 
         document.getElementById('income-input').value = '';
         document.getElementById('income-source').value = '';
-        run();
+        document.getElementById('income-currency').value = 'ILS';
+        await new Promise(r => setTimeout(r, 500));
+        await run();
     });
 
+
     document.getElementById('add-expense').addEventListener('click', async () => {
-        const amount = parseFloat(document.getElementById('expense-input').value);
+        const amount = document.getElementById('expense-input').value;
         const category = document.getElementById('expense-category').value;
+        const currency = document.getElementById('expense-currency').value;
 
         if (!amount || !category) return alert("Please enter both amount and category.");
 
@@ -188,18 +207,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ amount: parseFloat(amount), category: category.trim() })
-
+            body: JSON.stringify({ amount: parseFloat(amount), category, currency })
         });
-
-        if (!expenseSummary[category]) expenseSummary[category] = 0;
-        expenseSummary[category] += amount;
-        updateExpenseSummary();
 
         document.getElementById('expense-input').value = '';
         document.getElementById('expense-category').value = '';
-        fetchMonthlySummary();
-        run();
+        document.getElementById('expense-currency').value = 'ILS';
+        await new Promise(r => setTimeout(r, 500));
+        await run();
     });
+
 
 });

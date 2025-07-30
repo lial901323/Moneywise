@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="admin-dashboard.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
   <div class="dashboard">
     <aside class="sidebar">
@@ -17,7 +19,8 @@
       <button class="nav-btn"><i class="fas fa-cog"></i> Settings</button>
       <button class="nav-btn"><i class="fas fa-star"></i> Favourite</button>
       <button class="nav-btn"><i class="fas fa-history"></i> History</button>
-      <button class="nav-btn" onclick="window.location.href='user-login.html'"><i class="fas fa-sign-out-alt"></i> Signout</button>
+      <button class="nav-btn" onclick="window.location.href='index.html'"><i class="fas fa-sign-out-alt"></i>
+        Signout</button>
     </aside>
 
     <div class="main-content">
@@ -73,10 +76,20 @@
 
         <div class="top-row">
           <div class="card card5">
-            <h3>Delete User by ID</h3>
-            <input type="text" id="deleteUserId" placeholder="Enter User ID" />
-            <button onclick="deleteUserFromCard()">Delete</button>
+            <h3>Search User by ID</h3>
+            <input type="text" id="searchUserId" placeholder="Enter User ID" />
+            <button onclick="searchUser()">Search</button>
+
+            <div id="userInfo" style="margin-top:10px; display:none;">
+              <p><strong>Username:</strong> <span id="userName"></span></p>
+              <p><strong>Email:</strong> <span id="userEmail"></span></p>
+              <p><strong>Balance:</strong> ₪<span id="userBalance"></span></p>
+              <button id="deleteBtn" onclick="deleteUser()" style="background-color:red;color:white;">Delete</button>
+            </div>
+
+            <p id="searchMessage" style="color:red; margin-top:10px;"></p>
           </div>
+
 
           <div class="card card6">
             <h3>User Activity Summary</h3>
@@ -100,4 +113,5 @@
 
   <script src="script.js"></script>
 </body>
+
 </html>

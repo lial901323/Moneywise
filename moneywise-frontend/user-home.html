@@ -8,7 +8,7 @@
     <script src="user-home.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <title>Admin Dashboard</title>
+    <title>user home</title>
     <link rel="stylesheet" href="user-home.css">
 </head>
 
@@ -47,12 +47,19 @@
                         <p>Add Income</p>
                         <input type="number" id="income-input" placeholder="Enter amount" />
                         <input type="text" id="income-source" placeholder="Enter source" />
+                        <select id="income-currency">
+                            <option value="ILS">₪ - ILS (Shekel)</option>
+                            <option value="USD">$ - USD (Dollar)</option>
+                            <option value="EUR">€ - EUR (Euro)</option>
+                        </select>
                         <button id="add-income" class="income-btn">Submit</button>
                     </div>
+
 
                     <div class="action-card expense-card ">
                         <p>Add Expense</p>
                         <input type="number" id="expense-input" placeholder="Enter amount" />
+                        
                         <select id="expense-category">
                             <option value="">Select category</option>
                             <option value="Rent">Rent</option>
@@ -61,7 +68,12 @@
                             <option value="Bills">Bills</option>
                             <option value="Other">Other</option>
                         </select>
-
+                        <select id="expense-currency">
+                            <option value="ILS">₪ - ILS (Shekel)</option>
+                            <option value="USD">$ - USD (Dollar)</option>
+                            <option value="EUR">€ - EUR (Euro)</option>
+                        </select>
+                        
                         <button id="add-expense">Submit</button>
                     </div>
                     <div class="expense-summary-card card">
