@@ -7,7 +7,10 @@ const {
   getAllUsers,
   getAllExpenses,
   getTotalDeposits,
-  deleteUser
+  deleteUser,
+  getTopUsers,
+  getUserDetails,
+  getUserActivityChart
 } = require("../controllers/adminController");
 
 // 🛡 All routes below require: valid token + admin role
