@@ -15,6 +15,19 @@ const updateBalance = async () => {
     }
 };
 
+async function updateStats() {
+    const token = localStorage.getItem('userToken');
+    const res = await fetch('https://moneywise-backend.onrender.com/api/stats', {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    const stats = await res.json();
+
+    document.getElementById('income-today').innerText = `₪${stats.incomeToday.toFixed(2)}`;
+    document.getElementById('expense-today').innerText = `₪${stats.expenseToday.toFixed(2)}`;
+    document.getElementById('income-month').innerText = `₪${stats.incomeMonth.toFixed(2)}`;
+    document.getElementById('expense-month').innerText = `₪${stats.expenseMonth.toFixed(2)}`;
+}
+
 
 
 
@@ -191,6 +204,7 @@ async function updateExpenseSummary() {
     await new Promise(r => setTimeout(r, 500));
      run();
      updateBalance();
+     updateStats();
 });
 
 document.getElementById('add-expense').addEventListener('click', async () => {
@@ -219,6 +233,7 @@ document.getElementById('add-expense').addEventListener('click', async () => {
      run();
      updateBalance();
      updateExpenseSummary();
+     updateStats();
 });
 
 
@@ -229,45 +244,7 @@ document.getElementById('add-expense').addEventListener('click', async () => {
 
 
 
- document.getElementById('delete-account-btn').addEventListener('click', () => {
-    document.getElementById('delete-account-modal').style.display = 'flex';
-});
 
-document.getElementById('cancel-delete').addEventListener('click', () => {
-    document.getElementById('delete-account-modal').style.display = 'none';
-});
-
-document.getElementById('confirm-delete').addEventListener('click', async () => {
-    const token = localStorage.getItem('token');
-    const accountCode = document.getElementById('account-code').value;
-
-    if (!accountCode) {
-        alert('Please enter your account code.');
-        return;
-    }
-
-    try {
-        const res = await fetch('https://moneywise-backend.onrender.com/api/users/delete-me', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({ accountCode })
-        });
-
-        const data = await res.json();
-        alert(data.message);
-
-        if (res.ok) {
-            localStorage.clear();
-            window.location.href = '/user-login.html';
-        }
-    } catch (error) {
-        console.error('Error deleting account:', error);
-        alert('Failed to delete account');
-    }
-});
 
 
 });

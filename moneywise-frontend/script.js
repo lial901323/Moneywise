@@ -640,7 +640,6 @@ window.addEventListener('DOMContentLoaded', () => {
   fetchGrowthChart();
 
   setInterval(() => {
-    fetchTopUsers();
     fetchWeeklyData();
     fetchTop3UsersStats();
     fetchGrowthRate();

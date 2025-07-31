@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History</title>
+    <link rel="stylesheet" href="user-home.css">
+</head>
+<body>
+
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <button class="nav-btn" onclick="window.location.href='user-home.html'"><i class="fas fa-home"></i> Home</button>
+            <button class="nav-btn"><i class="fas fa-user"></i> Profile</button>
+            <button class="nav-btn"><i class="fas fa-envelope"></i> Message</button>
+            <button class="nav-btn"><i class="fas fa-cog"></i> Settings</button>
+            <button class="nav-btn"><i class="fas fa-star"></i> Favourite</button>
+            <button class="nav-btn active"><i class="fas fa-history"></i> History</button>
+            <button class="nav-btn" onclick="window.location.href='index.html'"><i class="fas fa-sign-out-alt"></i> Signout</button>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <h2>Transaction History</h2>
+
+            <div class="history-container">
+                <!-- Income Table -->
+                <div class="income-list">
+                    <h3>Incomes</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Amount (₪)</th>
+                                <th>Source</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="income-history">
+                            <!-- Data will be loaded via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Expense Table -->
+                <div class="expense-list">
+                    <h3>Expenses</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Amount (₪)</th>
+                                <th>Category</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expense-history">
+                            <!-- Data will be loaded via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="history.js"></script>
+</body>
+</html>

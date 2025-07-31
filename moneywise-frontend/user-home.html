@@ -21,7 +21,9 @@
             <button class="nav-btn"><i class="fas fa-envelope"></i> Message</button>
             <button class="nav-btn"><i class="fas fa-cog"></i> Settings</button>
             <button class="nav-btn"><i class="fas fa-star"></i> Favourite</button>
-            <button class="nav-btn"><i class="fas fa-history"></i> History</button>
+            <button class="nav-btn" onclick="window.location.href='history.html'">
+    <i class="fas fa-history"></i> History
+</button>
             <button class="nav-btn" onclick="window.location.href='index.html'"><i class="fas fa-sign-out-alt"></i>
                 Signout</button>
         </aside>
@@ -76,12 +78,7 @@
                         
                         <button id="add-expense">Submit</button>
                     </div>
-                    <div class="expense-summary-card card">
-                        <h3>Monthly Expenses by Category</h3>
-                        <ul id="expense-summary-list"></ul>
-                        <p>Total Expenses: <span id="monthly-expenses-card">₪0.00</span></p>
-                    </div>
-                    <button id="delete-account-btn" class="delete-btn">Delete My Account</button>
+                    
                     <div id="delete-account-modal" class="modal" style="display:none;">
     <div class="modal-content">
         <h3>Confirm Account Deletion</h3>
