@@ -79,7 +79,20 @@
                     <div class="expense-summary-card card">
                         <h3>Monthly Expenses by Category</h3>
                         <ul id="expense-summary-list"></ul>
+                        <p>Total Expenses: <span id="monthly-expenses-card">₪0.00</span></p>
                     </div>
+                    <button id="delete-account-btn" class="delete-btn">Delete My Account</button>
+                    <div id="delete-account-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <h3>Confirm Account Deletion</h3>
+        <p>Please enter your account code to confirm:</p>
+        <input type="text" id="account-code" placeholder="Enter account code">
+        <div class="modal-actions">
+            <button id="confirm-delete">Confirm</button>
+            <button id="cancel-delete">Cancel</button>
+        </div>
+    </div>
+</div>
 
 
                 </div>

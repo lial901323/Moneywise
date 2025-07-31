@@ -19,7 +19,7 @@ if (loginForm) {
 
       if (res.ok) {
         if (data.user.role === 'admin') {
-          localStorage.setItem('token', data.token);
+          localStorage.setItem('admintoken', data.token);
           localStorage.setItem('role', 'admin');
           if (remember) {
             localStorage.setItem('savedEmail', email);

@@ -3,7 +3,7 @@ let expenseSummary = {};
 
 
 const updateBalance = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('userToken');
     try {
         const res = await fetch('https://moneywise-backend.onrender.com/api/stats/balance', {
             headers: { Authorization: `Bearer ${token}` }
@@ -17,24 +17,6 @@ const updateBalance = async () => {
 
 
 
-
-async function fetchMonthlySummary() {
-    const token = localStorage.getItem('token');
-    const res = await fetch('https://moneywise-backend.onrender.com/api/expenses/monthly-summary', {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
-    const data = await res.json();
-
-    const list = document.getElementById('expense-summary-list');
-    list.innerHTML = '';
-    data.forEach(item => {
-        const li = document.createElement('li');
-        li.innerHTML = `<span>${item._id}</span> <span>₪${item.total.toFixed(2)}</span>`;
-        list.appendChild(li);
-    });
-}
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -85,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     run = async () => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('userToken');
         if (!token) {
             window.location.href = 'index.html';
             return;
@@ -148,74 +130,144 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    function updateExpenseSummary() {
+async function updateExpenseSummary() {
+    const token = localStorage.getItem('userToken');
+    try {
+        const res = await fetch('https://moneywise-backend.onrender.com/api/expenses/monthly-summary', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = await res.json();
+
         const list = document.getElementById('expense-summary-list');
         list.innerHTML = '';
-        for (let category in expenseSummary) {
+        data.forEach(item => {
             const li = document.createElement('li');
-            li.innerHTML = `<span>${category}</span> <span>₪${expenseSummary[category].toFixed(2)}</span>`;
+            li.innerHTML = `<span>${item._id}</span> <span>₪${item.total.toFixed(2)}</span>`;
             list.appendChild(li);
+        });
+
+        const totalExpenses = data.reduce((sum, item) => sum + item.total, 0);
+        const cardElement = document.getElementById('monthly-expenses-card');
+        if (cardElement) {
+            cardElement.textContent = `₪${totalExpenses.toFixed(2)}`;
         }
+    } catch (err) {
+        console.error('Error updating expense summary:', err);
     }
+}
+
 
     run();
-    fetchMonthlySummary();
-
     document.getElementById('toggle-chart').addEventListener('click', () => {
         currentView = currentView === 'daily' ? 'monthly' : 'daily';
         renderChart(currentView);
     });
 
+    
+
+
     document.getElementById('add-income').addEventListener('click', async () => {
-        const amount = document.getElementById('income-input').value;
-        const source = document.getElementById('income-source').value;
-        const currency = document.getElementById('income-currency').value;
+    const amount = document.getElementById('income-input').value;
+    const source = document.getElementById('income-source').value;
+    const currency = document.getElementById('income-currency').value;
 
-        if (!amount || !source) return alert("Please enter both amount and source.");
+    if (!amount || !source) return alert("Please enter both amount and source.");
 
-        const token = localStorage.getItem('token');
+    const token = localStorage.getItem('userToken');
 
-        await fetch('https://moneywise-backend.onrender.com/api/deposits', {
-            method: 'POST',
+    await fetch('https://moneywise-backend.onrender.com/api/deposits', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ amount: parseFloat(amount), source, currency })
+    });
+
+    document.getElementById('income-input').value = '';
+    document.getElementById('income-source').value = '';
+    document.getElementById('income-currency').value = 'ILS';
+
+    await new Promise(r => setTimeout(r, 500));
+     run();
+     updateBalance();
+});
+
+document.getElementById('add-expense').addEventListener('click', async () => {
+    const amount = document.getElementById('expense-input').value;
+    const category = document.getElementById('expense-category').value;
+    const currency = document.getElementById('expense-currency').value;
+
+    if (!amount || !category) return alert("Please enter both amount and category.");
+
+    const token = localStorage.getItem('userToken');
+
+    await fetch('https://moneywise-backend.onrender.com/api/expenses', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ amount: parseFloat(amount), category, currency })
+    });
+
+    document.getElementById('expense-input').value = '';
+    document.getElementById('expense-category').value = '';
+    document.getElementById('expense-currency').value = 'ILS';
+
+    await new Promise(r => setTimeout(r, 500));
+     run();
+     updateBalance();
+     updateExpenseSummary();
+});
+
+
+
+
+ updateExpenseSummary();
+
+
+
+
+ document.getElementById('delete-account-btn').addEventListener('click', () => {
+    document.getElementById('delete-account-modal').style.display = 'flex';
+});
+
+document.getElementById('cancel-delete').addEventListener('click', () => {
+    document.getElementById('delete-account-modal').style.display = 'none';
+});
+
+document.getElementById('confirm-delete').addEventListener('click', async () => {
+    const token = localStorage.getItem('token');
+    const accountCode = document.getElementById('account-code').value;
+
+    if (!accountCode) {
+        alert('Please enter your account code.');
+        return;
+    }
+
+    try {
+        const res = await fetch('https://moneywise-backend.onrender.com/api/users/delete-me', {
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ amount: parseFloat(amount), source, currency })
+            body: JSON.stringify({ accountCode })
         });
 
-        document.getElementById('income-input').value = '';
-        document.getElementById('income-source').value = '';
-        document.getElementById('income-currency').value = 'ILS';
-        await new Promise(r => setTimeout(r, 500));
-        await run();
-    });
+        const data = await res.json();
+        alert(data.message);
 
-
-    document.getElementById('add-expense').addEventListener('click', async () => {
-        const amount = document.getElementById('expense-input').value;
-        const category = document.getElementById('expense-category').value;
-        const currency = document.getElementById('expense-currency').value;
-
-        if (!amount || !category) return alert("Please enter both amount and category.");
-
-        const token = localStorage.getItem('token');
-
-        await fetch('https://moneywise-backend.onrender.com/api/expenses', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({ amount: parseFloat(amount), category, currency })
-        });
-
-        document.getElementById('expense-input').value = '';
-        document.getElementById('expense-category').value = '';
-        document.getElementById('expense-currency').value = 'ILS';
-        await new Promise(r => setTimeout(r, 500));
-        await run();
-    });
+        if (res.ok) {
+            localStorage.clear();
+            window.location.href = '/user-login.html';
+        }
+    } catch (error) {
+        console.error('Error deleting account:', error);
+        alert('Failed to delete account');
+    }
+});
 
 
 });

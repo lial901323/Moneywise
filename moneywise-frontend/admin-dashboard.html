@@ -55,60 +55,84 @@
             </div>
 
             <div class="card card3">
-              <h3>Level</h3>
+              <h3>Deposits (Last 7 Days)</h3>
+              <canvas id="weeklyChart" height="200"></canvas>
             </div>
-          </div>
 
-          <div class="right-row">
-            <div class="card card2">
-              <h3>Top Users</h3>
-              <ul id="topUsersList"></ul>
-              <div id="userDetailsSection">
-                <h4>Selected User Details</h4>
-                <div id="userDetails"></div>
+            <div class="right-row">
+              <div class="card card2">
+                <h3>Top Users</h3>
+                <div class="table-header">
+                  <button id="viewAllBtn">View All Users</button>
+                </div>
+                <table id="topUsersTable">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Username</th>
+                      <th>Email</th>
+                      <th>Balance</th>
+                    </tr>
+                  </thead>
+                  <tbody id="topUsersList"></tbody>
+                </table>
               </div>
-              <button id="viewAllBtn">View All Users</button>
+
+              <div class="card card4">
+                <h3>Top 3 Users (Last 7 Days)</h3>
+                <canvas id="top3UsersChart" width="400" height="200"></canvas>
+              </div>
             </div>
 
-            <div class="card card4">Card 4</div>
-          </div>
-        </div>
 
-        <div class="top-row">
-          <div class="card card5">
-            <h3>Search User by ID</h3>
-            <input type="text" id="searchUserId" placeholder="Enter User ID" />
-            <button onclick="searchUser()">Search</button>
+            <div class="top-row">
+              <div class="card card5">
+                <h3>Search User by ID</h3>
+                <input type="text" id="searchUserId" placeholder="Enter User ID" />
+                <button onclick="searchUser()">Search</button>
 
-            <div id="userInfo" style="margin-top:10px; display:none;">
-              <p><strong>Username:</strong> <span id="userName"></span></p>
-              <p><strong>Email:</strong> <span id="userEmail"></span></p>
-              <p><strong>Balance:</strong> ₪<span id="userBalance"></span></p>
-              <button id="deleteBtn" onclick="deleteUser()" style="background-color:red;color:white;">Delete</button>
+                <div id="userInfo" style="margin-top:10px; display:none;">
+                  <p><strong>Username:</strong> <span id="userName"></span></p>
+                  <p><strong>Email:</strong> <span id="userEmail"></span></p>
+                  <p><strong>Balance:</strong> ₪<span id="userBalance"></span></p>
+                  <button id="deleteBtn" onclick="deleteUser()"
+                    style="background-color:red;color:white;">Delete</button>
+                </div>
+
+                <p id="searchMessage" style="color:red; margin-top:10px;"></p>
+              </div>
+
+
+              <div class="card card6">
+                <h3></h3>
+                <canvas id="activityChart" width="400" height="200"></canvas>
+              </div>
             </div>
-
-            <p id="searchMessage" style="color:red; margin-top:10px;"></p>
-          </div>
-
-
-          <div class="card card6">
-            <h3>User Activity Summary</h3>
-            <canvas id="activityChart" width="400" height="200"></canvas>
-          </div>
-        </div>
       </section>
     </div>
 
     <section class="right-area">
-      <div class="top-row">
-        <div class="box boxA">Box A</div>
-        <div class="box boxB">Box B</div>
+      <div class="box boxA">
+        <h3>Growth Rate</h3>
+        <canvas id="growthRateChart"></canvas>
+        <p id="growth-rate"></p>
       </div>
-      <div class="bottom-col">
-        <div class="box boxC">Box C</div>
-        <div class="box boxD">Box D</div>
+
+
+
+
+      <div class="box boxC">
+        <h3>Recent Transactions</h3>
+        <div class="chart-container">
+          <canvas id="transactionsChart"></canvas>
+        </div>
       </div>
+      <ul id="recent-transactions"></ul>
     </section>
+
+
+
+
   </div>
 
   <script src="script.js"></script>
